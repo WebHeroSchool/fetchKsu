@@ -9,12 +9,19 @@ let nameFromUrl= (url) => {
     }
     return name;
 };
+let date = new Date();
 
 let name = nameFromUrl(url);
+const getDate = new Promise((resolve, reject) => {
+    setTimeout(() => date)
+});
 
 fetch('https://api.github.com/users/' + name)
     .then(res => res.json())
     .then(json => {
+        if (json.message === "Not Found") {
+            throw json.message;
+        }
         const avatar = json.avatar_url;
         const user = json.login;
         let description = json.bio;
@@ -51,4 +58,4 @@ fetch('https://api.github.com/users/' + name)
         createAvatar();
         createUrl();
     })
-    .catch(err => alert('Информация не доступна'));
+    .catch(err => alert('Информация не доступна: ' + err));
