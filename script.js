@@ -19,7 +19,7 @@ let nameFromUrl= (url) => {
 let date = new Date();
 let name = nameFromUrl(url);
 const getDate = new Promise((resolve, reject) => {
-    setTimeout(() => date ? resolve(date) : reject('Время неизвестно'), 2000)
+    setTimeout(() => date ? resolve(date) : reject('Время неизвестно'), 5000)
 });
 
 const getRequest = fetch(`https://api.github.com/users/${name}`);
