@@ -1,5 +1,11 @@
 let body = document.body;
 let url = window.location.toString();
+const loader = document.getElementById('loader');
+let requestFromPromise, dateFromPromise;
+
+const cleanLoader = () => {
+    loader.style.display = 'none';
+};
 
 let nameFromUrl= (url) => {
     let getUrl = url.split('=');
@@ -9,15 +15,22 @@ let nameFromUrl= (url) => {
     }
     return name;
 };
+
 let date = new Date();
 
 let name = nameFromUrl(url);
 const getDate = new Promise((resolve, reject) => {
-    setTimeout(() => date)
+    setTimeout(() => date ? resolve(date) : reject('Время неизвестно'), 2000)
 });
 
-fetch('https://api.github.com/users/' + name)
-    .then(res => res.json())
+const getRequest = fetch(`https://api.github.com/users/${name}`);
+
+Promise.all([getRequest, getDate])
+    .then(([request, date]) => {
+        requestFromPromise = request;
+        dateFromPromise = date
+    })
+    .then(res => requestFromPromise.json())
     .then(json => {
         if (json.message === "Not Found") {
             throw json.message;
@@ -57,5 +70,11 @@ fetch('https://api.github.com/users/' + name)
         createDescription();
         createAvatar();
         createUrl();
+    })
+    .then(res => {
+        const date = document.createElement('p');
+        date.innerHTML = `${dateFromPromise}`;
+        body.appendChild(date);
+        cleanLoader();
     })
     .catch(err => alert('Информация не доступна: ' + err));
