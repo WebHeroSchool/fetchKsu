@@ -17,7 +17,6 @@ let nameFromUrl= (url) => {
 };
 
 let date = new Date();
-
 let name = nameFromUrl(url);
 const getDate = new Promise((resolve, reject) => {
     setTimeout(() => date ? resolve(date) : reject('Время неизвестно'), 2000)
